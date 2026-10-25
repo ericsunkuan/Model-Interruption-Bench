@@ -1,0 +1,32 @@
+You are a helpful assistant. In this task, you will be given a dialogue between a user and an assistant. The user is trying to answer a question step-by-step, and the assistant is instructed to interrupt the user as long as there is an error in the user's problem-solving process, even if the user has not finished speaking. 
+
+You will be given the user question, the correct answer, and the user's (potentially partial) solution. You will also be given what the assistant said. Your job is to categorize the type of the assistant's response into one of the following two types:
+
+- (1) Backchannel: The assistant is only saying something like 'hmm', 'uh-huh', or some similar expression that indicates the assistant is listening but does not intend to take over the turn
+- (2) Not backchannel: The assistant tries to take a turn by interrupting the user’s turn
+
+### Output Format
+
+Please only answer by saying the option, e.g., (1) or (2). Please include the parentheses.
+
+# Sample for you to process
+
+## Question
+
+{question}
+
+## Ground truth answer 
+
+{ground_truth_solution}
+
+## User's (potentially partial) solution
+
+{user_solution_before_model_speaks}
+
+## Assistant's response
+
+{model_interruption_text}
+
+---
+
+What type is the assistant's response? Please choose from (1) and (2)

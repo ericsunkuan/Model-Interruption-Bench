@@ -1,0 +1,105 @@
+You will be given a dialogue where the user is solving a problem step-by-step. The assistant has interrupted the user. Your job is to determine if the assistant's interruption correctly identifies the error.
+
+**Note:** The interruption has already been confirmed to occur after the error step was spoken. You do not need to check timing — focus only on whether the assistant correctly identified the error. The assistant's turn may also be a response given after the user finished speaking; judge it in the same way.
+
+### **You will receive these fields**
+
+* **Question**
+
+* **Ground truth answer**
+
+* **Assistant's interruption** (what the assistant said)
+
+* **Complete user answer the user intended to say** (what the user would have said if not interrupted)
+
+* **Steps where the error occurs in the complete user answer** (or `None` if the intended full answer is error-free)
+
+* **Explanation of the error** (or `None`)
+
+---
+
+## **Your task**
+
+Determine if the assistant's interruption correctly identifies the error consistent with the given **Explanation of the error**.
+
+If the user's solution has **no** error (the error steps are `None`), determine whether the assistant **correctly treats the solution as correct** without claiming a mistake. The `None` label is ground truth: do not re-check the user's solution yourself, and do not penalize the assistant because the user's wording or method differs from the ground truth answer.
+
+## **Your output**
+
+Choose exactly **one** label:
+
+### **(1) Valid**
+
+Use **Valid** in either of these situations:
+
+**Case A (error present):** The assistant's interruption correctly identifies the error (matches the Explanation of the error).
+
+**Case B (no error):** The error steps are `None`, and the assistant acknowledges that the solution is correct (e.g., affirms the reasoning or final answer, says there is no mistake, or clearly agrees with the user's answer) **without claiming any mistake**.
+
+---
+
+### **(2) Invalid**
+
+Use **Invalid** in either of these situations:
+
+**Case A (false alarm):** The user's intended full solution is correct (`Steps where the error occurs = None`), but the assistant still interrupts and claims an error. This includes saying that a step, a number, or the final answer is wrong, or proposing a different final answer. Opening phrases such as "hold on" do not count as a claimed error by themselves; judge what the assistant actually asserts.
+
+**Case B (wrong diagnosis):** The user's intended full solution is incorrect, but the assistant's interruption identifies the wrong issue or gives an incorrect reason — it does not match the given Explanation of the error.
+
+---
+
+### **(3) Unrelated**
+
+The assistant's interruption is not about the user's reasoning or error in the solution (e.g., it changes the topic, responds to something else, is nonsensical relative to the problem, or is only a generic listening signal with no stance on correctness).
+
+### Output Format
+
+First, provide an analysis on the user's answer and the assistant's response.
+Next, conclude by saying "Final verdict: VERDICT", where the VERDICT should be chosen from (1), (2), (3). Please include the parentheses.
+
+
+## Evaluation Steps
+
+### Step 0.
+
+Check whether the **steps where the error occurs** is `None`. If it is `None`: label **Valid** if the assistant treats the solution as correct without claiming a mistake, **Invalid** if it claims a mistake, and **Unrelated** if it takes no stance on correctness. Stop here. Otherwise, continue to Step 1.
+
+### Step 1.
+
+Check the **complete answer** the user intended to say, and compare it with the **steps where the error occurs** and the corresponding reason. Keep in mind where the error occurs and why it is an error.
+
+### Step 2.
+
+Evaluate the **assistant's interruption** against the **Explanation of the error**. Does the interruption correctly identify the error? If yes, label Valid. If the interruption identifies a different issue or gives an incorrect reason, label Invalid.
+
+
+# Sample for you to process
+
+## Question
+
+{question}
+
+## Ground truth answer
+
+{ground_truth_solution}
+
+## Assistant's interruption
+
+{model_interruption_text}
+
+## Complete user answer the user intended to say
+
+{complete_user_text_intended_to_say}
+
+## Steps where the error occurs
+
+{error_step_text}
+
+## Explanation of the error
+
+{error_reason}
+
+
+---
+
+What is the type of the assistant's response? Think carefully based on the evaluation steps, and strictly follow the required output format.

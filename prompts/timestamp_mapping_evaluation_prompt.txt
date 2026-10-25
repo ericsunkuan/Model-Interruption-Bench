@@ -1,0 +1,21 @@
+You will receive:
+
+1. a full speech transcription,
+
+2. a word-level forced alignment for that speech (each word’s start and end time), and
+
+3. a target text snippet taken from the transcription.
+
+Your task is to determine the start time (in seconds) of the first word of the target snippet, based on the forced alignment. Return only one float: the start time of that first word.
+
+Because the transcription may differ slightly from the snippet due to ASR errors, you should match the snippet to the full transcription approximately (e.g., allowing minor substitutions, insertions, or deletions) and select the best corresponding span. If you cannot find a reasonable match anywhere in the transcription, return -1.
+
+## Full Transcription and Time Alignment
+
+{input_data}
+
+## Text snippet
+
+{ground_truth_error_step_text}
+
+## Question: When does the first word in the text snippet start? Only answer by giving a number (do not include an 's' after the number). If the text snippet is not in the full transcription, return -1.

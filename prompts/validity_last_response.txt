@@ -1,0 +1,122 @@
+You will be given a dialogue where the user is solving a math problem step-by-step and the assistant is listening to the user. The user's speech may be incomplete because the user was interrupted by the assistant. Your job is to determine whether the assistant's response is appropriate given whether the user's solution contains an error.
+
+### **You will receive these fields**
+
+* **Question**
+
+* **Ground truth answer**
+
+* **User’s answer before the assistant's turn** (what the user actually said up to the assistant started to speak)
+
+* **Assistant’s turn** (what the assistant said)
+
+* **Complete user answer the user intended to say** (what the user would have continued if the assistant did not speak during the user's speech)
+
+* **Steps where the error occurs in the complete user answer** (or `None` if the intended full answer is error-free)
+
+* **Explanation of the error** (or `None`)
+
+If the “complete user answer” is longer than what the user actually said, that means the user was interrupted mid-solution. If it is not, that means the assistant let the user fully speak and then took the turn.
+
+---
+
+## **Your task**
+
+If the user's solution has an error (the error steps are not `None`), determine if the assistant clearly caught the error and stated the explanation of the error, which matches the given **Explanation of the error**.
+
+If the user's solution has **no** error (the error steps are `None`), determine whether the assistant **correctly acknowledges that the solution is correct** without inventing a mistake.
+
+The `None` label is ground truth. When the error steps are `None`, treat the user's solution as correct. Do not re-check the user's solution yourself, and do not penalize the assistant because the user's wording or method differs from the ground truth answer.
+
+## **Your output**
+
+Choose exactly **one** label:
+
+### **(A) Valid**
+
+Use **Valid** in either of these situations:
+
+**Case 1 (error present):** The error steps are not `None`, and the assistant clearly points out the error.
+
+**Case 2 (no error):** The error steps are `None`, and the assistant correctly acknowledges that the solution is correct (e.g., affirms that the reasoning or final answer is right, says there is no mistake, or clearly agrees with the user's final answer) **without claiming any mistake**.
+
+---
+
+### **(B) Invalid**
+
+Use **Invalid** in either of these situations:
+
+**Case 1 (error present):** The user had made a mistake, but the assistant points out the wrong issue, gives an incorrect reason, or did not even notice that there was an error.
+
+**Case 2 (no error):** The error steps are `None`, but the assistant claims that a step, a number, or the final answer is wrong, proposes a different final answer, or "corrects" a step that is not actually changed. Opening phrases such as "hold on" do not count as a claimed mistake by themselves; judge what the assistant actually asserts.
+
+---
+
+### **(C) Unrelated**
+
+The assistant’s response is not about the user’s reasoning or the correctness of the solution (e.g., it changes the topic, responds to something else, is empty or nonsensical relative to the problem, or is only a generic listening signal such as "mm-hmm" or "go on" with no stance on correctness).
+
+### Output Format
+
+First, provide an analysis on the user's answer and the assistant's response.
+Next, conclude by saying  "Final verdict: VERDICT", where the VERDICT should be choose from (A), (B), (C). Please include the parenthesis.
+
+
+## Evaluation Steps
+
+Please strictly follow the below evaluation steps when deciding the validity of the assistant's response.
+
+### Step 1.
+
+Check whether the **steps where the error occurs** is `None`.
+
+- If it is `None` (no error): label **Valid** if the assistant acknowledges that the solution is correct without claiming a mistake; label **Invalid** if the assistant claims a mistake or gives a different answer; label **Unrelated** if the response does not engage with the correctness of the solution. Stop here.
+- If it is not `None`: continue to Step 2.
+
+### Step 2.
+
+(Only when an error exists.) Check the **complete answer** the user intended to say, and compare it with the **steps where the error occurs** and the corresponding reason. Keep in mind where the error occurs and why it is an error.
+
+### Step 3.
+
+(Only when an error exists.) Compare the **User’s answer before the interruption** with the **complete answer the user intended to say** and see if the user has already spoken out the error steps. If the user's answer before the interruption does not include the error steps, the interruption is invalid.
+
+### Step 4.
+
+(Only when an error exists.) If the user's answer **before the interruption** has already covered the error step, you need to check the assistant's interruption. Compare the assistant's interruption with the explanation of the error. If the assistant's interruption covers the explanation of the error provided to you (or is related to the error's explanation), the interruption is valid. Otherwise, it is an invalid interruption.
+
+
+# Sample for you to process
+
+## Question
+
+{question}
+
+## Ground truth answer
+
+{ground_truth_solution}
+
+## User’s answer before the assistant's turn
+
+{user_solution_before_model_speaks}
+
+## Assistant’s turn
+
+{model_interruption_text}
+
+## Complete user answer the user intended to say
+
+{complete_user_text_intended_to_say}
+
+## Steps where the error occurs
+
+{error_step_text}
+
+## Explanation of the error
+
+{error_reason}
+
+
+---
+
+What is the type of the assistant's response? Think carefully based on the evaluation steps, and strictly follow the required output format.

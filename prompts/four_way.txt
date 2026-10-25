@@ -1,0 +1,58 @@
+You will be given a dialogue between a user and an assistant. The user is answering a question out loud (solving a problem step by step, reasoning through it, or stating facts), and the assistant is listening. The assistant was instructed to interrupt the user if there is an error in what the user says.
+
+In this dialogue, the user's complete answer is **correct**: it contains no error. Treat this as ground truth. Do not re-check the user's answer yourself.
+
+You will be given the question, what the user had said before the assistant spoke, and what the assistant said while the user was still speaking. Your job is to classify what the assistant did into exactly one of four types.
+
+## **Your output**
+
+Choose exactly **one** label:
+
+### **(A) No interrupt or backchannel**
+
+The assistant did not take the turn. Its utterance is empty, or it is only a backchannel: something like "hmm", "uh-huh", or a similar short expression that indicates the assistant is listening but does not intend to take over the turn. Longer statements count as taking the turn, even if they only say the assistant is ready or tell the user to go ahead (those are **(D)**).
+
+### **(B) Interrupt-right**
+
+The assistant takes the turn to affirm that the user is correct (e.g., "That's right", "Yes, four times five is twenty, good"), **without claiming any error**.
+
+### **(C) Interrupt-wrong**
+
+The assistant takes the turn and claims there is an error in the user's answer: it says a step, a number, a fact, or the answer is wrong, proposes a different value, or "corrects" something the user said. If the utterance both affirms something and claims an error, choose (C). Opening phrases such as "hold on" do not count as a claimed error by themselves; judge what the assistant actually asserts.
+
+### **(D) Unrelated**
+
+The assistant takes the turn with content that neither affirms the user nor claims an error: off-topic content, a response to something else, a statement that it is ready or listening, nonsensical speech, or the assistant just trying to solve the problem or continue the answer itself.
+
+### Output Format
+
+First, briefly analyze what the assistant said and whether it takes the turn.
+Next, conclude by saying "Final verdict: VERDICT", where VERDICT is chosen from (A), (B), (C), (D). Please include the parentheses.
+
+## Evaluation Steps
+
+### Step 1.
+
+Decide whether the assistant takes the turn. If its utterance is empty or only a backchannel, label **(A)** and stop.
+
+### Step 2.
+
+If it takes the turn, decide what it asserts about the user's answer. Any claimed error is **(C)**. Affirming the user without claiming an error is **(B)**. Anything else is **(D)**.
+
+# Sample for you to process
+
+## Question
+
+{question}
+
+## What the user said before the assistant spoke
+
+{user_solution_before_model_speaks}
+
+## What the assistant said while the user was speaking
+
+{model_interruption_text}
+
+---
+
+Which type is the assistant's utterance? Think carefully based on the evaluation steps, and strictly follow the required output format.
